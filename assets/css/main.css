@@ -1,0 +1,27 @@
+html,
+body {
+  background-color: #fff;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+code {
+  font-size: 1rem;
+  font-family: consolas;
+}
+
+main a {
+  color: #000;
+}
+main a:hover {
+  color: #295bac;
+  text-decoration: unset;
+}
+
+pre {
+  background-color: #fff;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
