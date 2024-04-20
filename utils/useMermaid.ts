@@ -1,6 +1,13 @@
-const { default: mermaid } = await import('mermaid')
-const running = ref(false)
+import type { Mermaid } from 'mermaid'
+
+const running = ref(true)
 const queue = reactive<HTMLElement[]>([])
+// const { default: mermaid } = await import('mermaid')
+let mermaid: Mermaid
+import('mermaid').then((module) => {
+  mermaid = module.default
+  running.value = false
+})
 watch([running, queue], (v) => {
   if (v[0] || v[1].length === 0) {
     return
