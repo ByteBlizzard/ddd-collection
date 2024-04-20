@@ -20,6 +20,10 @@ main a:hover {
   text-decoration: unset;
 }
 
+img {
+  max-width: 100%;
+}
+
 pre {
   background-color: #fff;
   overflow-x: auto;
