@@ -44,7 +44,7 @@ const results = await searchContent(search)
 </script>
 
 <template>
-  <div class="outer">
+  <div class="ddd-doc">
     <div class="header">
       <Sidebar v-model:visible="searchVisible" header="更多">
         <br />
@@ -91,7 +91,7 @@ const results = await searchContent(search)
 </template>
 
 <style scoped>
-.outer {
+.ddd-doc {
   -webkit-overflow-scrolling: touch;
 }
 .header {
@@ -102,8 +102,12 @@ const results = await searchContent(search)
   position: relative;
 }
 .container {
+  position: fixed;
+  right: 0;
+  padding: 0 64px 96px;
+  width: 100%;
+  /* padding-left: calc(100% - var(--vp-sidebar-width-small)); */
   max-height: calc(100vh - 3rem);
   overflow-y: scroll;
-  padding: 0.5rem 1.5rem 0;
 }
 </style>

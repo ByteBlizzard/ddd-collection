@@ -1,6 +1,18 @@
+<script setup lang="ts">
+const route = useRoute()
+onMounted(() => {
+  if (route.hash) {
+    const element = document.getElementById(route.hash.substring(1))
+    if (element) {
+      window.document.getElementsByClassName('ddd-doc')[0].scrollBy(0, element.offsetTop - 58)
+    }
+  }
+})
+</script>
+
 <template>
   <main>
-    <ContentDoc>
+    <ContentDoc class="ddd-doc">
       <template #not-found>
         <p>
           资源未找到：<b>{{ $router.currentRoute.value.fullPath }}</b>
