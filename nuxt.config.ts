@@ -7,8 +7,12 @@ export default defineNuxtConfig({
     },
   },
   ssr: false,
-  css: ['primevue/resources/themes/aura-light-green/theme.css', 'primeicons/primeicons.css', '~/assets/css/main.css'],
-  modules: ['@nuxt/content', 'nuxt-primevue'],
+  css: [
+    'primevue/resources/themes/aura-light-green/theme.css',
+    'primeicons/primeicons.css',
+    '~/assets/styles/default.scss',
+  ],
+  modules: ['@nuxt/content', 'nuxt-primevue', '@nuxtjs/color-mode'],
   content: {
     // documentDriven: true,
     experimental: {
@@ -18,9 +22,13 @@ export default defineNuxtConfig({
       },
     },
     highlight: {
-      theme: 'github-light',
+      theme: 'vitesse-dark',
       langs: ['json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml', 'java', 'kt'],
     },
+  },
+  colorMode: {
+    preference: 'system',
+    fallback: 'light',
   },
   vite: {
     esbuild: {
