@@ -4,8 +4,16 @@ const PrimeVue = usePrimeVue()
 
 //====================== 主题 ======================
 const colorMode = useColorMode()
+function updatePrimeVueTheme(theme: 'dark' | 'light') {
+  if (theme === 'dark') {
+    PrimeVue.changeTheme('aura-light-green', 'aura-dark-green', 'theme-link', () => {})
+  } else {
+    PrimeVue.changeTheme('aura-dark-green', 'aura-light-green', 'theme-link', () => {})
+  }
+}
 const existColorMode = window.localStorage.getItem('config.colorMode') || 'light'
 colorMode.preference = existColorMode
+updatePrimeVueTheme(existColorMode as 'dark' | 'light')
 watch(
   () => colorMode.preference,
   (n, o) => {
@@ -13,11 +21,7 @@ watch(
       return
     }
     window.localStorage.setItem('config.colorMode', n)
-    if (n === 'dark') {
-      PrimeVue.changeTheme('aura-light-green', 'aura-dark-green', 'theme-link', () => {})
-    } else {
-      PrimeVue.changeTheme('aura-dark-green', 'aura-light-green', 'theme-link', () => {})
-    }
+    updatePrimeVueTheme(n as 'dark' | 'light')
   }
 )
 //====================== 布局 ======================
