@@ -87,6 +87,12 @@
 
   --vp-sidebar-width-mobile: 320px;
   --vp-sidebar-width-small: 272px;
+
+  --shiki-default: var(--vt-c-text-dark-1);
+  --shiki-default-bg: none;
+  --shiki-default-font-style: var(--vt-font-family-base);
+  --shiki-default-font-weight: normal;
+  --shiki-default-text-decoration: none;
 }
 
 .dark-mode {
