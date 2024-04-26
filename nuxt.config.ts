@@ -7,14 +7,24 @@ export default defineNuxtConfig({
     },
   },
   ssr: false,
-  css: [
-    'primevue/resources/themes/aura-light-green/theme.css',
-    'primeicons/primeicons.css',
-    '~/assets/styles/default.scss',
-  ],
+  css: ['primeicons/primeicons.css', '~/assets/styles/default.scss'],
   modules: ['@nuxt/content', 'nuxt-primevue', '@nuxtjs/color-mode'],
+  app: {
+    head: {
+      link: [
+        {
+          id: 'theme-link',
+          rel: 'stylesheet',
+          href: '/styles/aura-light-green/theme.css',
+        },
+      ],
+    },
+  },
   content: {
-    // documentDriven: true,
+    markdown: {},
+    documentDriven: {
+      injectPage: false,
+    },
     experimental: {
       clientDB: process.env.NODE_ENV === 'development' ? false : true,
       search: {
@@ -22,7 +32,7 @@ export default defineNuxtConfig({
       },
     },
     highlight: {
-      theme: 'vitesse-dark',
+      theme: 'github-dark',
       langs: ['json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml', 'java', 'kt'],
     },
   },

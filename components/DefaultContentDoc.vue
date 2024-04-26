@@ -1,18 +1,60 @@
 <script setup lang="ts">
+import PanelMenu from 'primevue/panelmenu'
 const route = useRoute()
+
+//====================== TOC ======================
+const tocItems = ref<any>([])
+const expandedKeys = ref<{ [key: string]: boolean }>({})
+const layoutNameState = useLayoutName()
+const { toc } = useContent()
+
+function initToc(tocValue: any): any {
+  const result = []
+  if (!tocValue) {
+    return []
+  }
+  for (const item of tocValue) {
+    const i: any = {
+      key: item.id,
+      label: item.text,
+      command: () => {
+        const element = document.getElementById(item.id)!
+        const scroller = window.document.getElementsByClassName('ddd-doc')[0].parentElement!
+        scroller.scrollTo(0, element.offsetTop)
+      },
+    }
+    if (item.children) {
+      i.items = initToc(item.children)
+      expandedKeys.value[item.id] = true
+    }
+    result.push(i)
+  }
+  return result
+}
 onMounted(() => {
+  tocItems.value = initToc(toc.value && toc.value.links)
+})
+watch(toc, (n, o) => {
+  tocItems.value = initToc(toc.value && toc.value.links)
+})
+
+//====================== 锚点跳转 ======================
+onMounted(() => {
+  const scroller = window.document.getElementsByClassName('ddd-doc')[0].parentElement!
   if (route.hash) {
     const element = document.getElementById(route.hash.substring(1))
     if (element) {
-      window.document.getElementsByClassName('ddd-doc')[0].scrollBy(0, element.offsetTop - 58)
+      scroller.scrollTo(0, element.offsetTop)
     }
+  } else {
+    scroller.scrollTo(0, 0)
   }
 })
 </script>
 
 <template>
-  <main>
-    <ContentDoc class="ddd-doc">
+  <main :style="{ width: layoutNameState === 'pc' ? 'calc(100% - 320px)' : '100%' }">
+    <ContentDoc>
       <template #not-found>
         <p>
           资源未找到：<b>{{ $router.currentRoute.value.fullPath }}</b>
@@ -25,4 +67,54 @@ onMounted(() => {
       </template>
     </ContentDoc>
   </main>
+  <div v-if="layoutNameState === 'pc'" class="toc">
+    <p class="title">本页目录</p>
+    <PanelMenu
+      theme="dark"
+      :expandedKeys="expandedKeys"
+      :model="tocItems"
+      style="margin-top: 10px; width: 300px"
+    ></PanelMenu>
+  </div>
 </template>
+
+<style lang="scss">
+/* .p-panelmenu-panel {
+  border: none;
+  margin-bottom: 0;
+  .p-focus {
+    .p-menuitem-content :hover {
+      background-color: var(--vt-c-divider);
+    }
+  }
+  .p-panelmenu-header-content {
+    background: none;
+    .p-menuitem {
+      margin: 10px 0;
+    }
+  }
+  .p-panelmenu-content {
+    background: none;
+  }
+  .p-menuitem-text {
+    line-height: 1.2rem;
+    color: var(--vt-c-text-1);
+    left: 32px;
+  }
+} */
+</style>
+<style scoped lang="scss">
+main {
+  width: calc(100% - 320px);
+}
+.toc {
+  position: fixed;
+  top: 3rem;
+  right: 0;
+  width: 320px;
+  height: 100%;
+  .title {
+    font-weight: bold;
+  }
+}
+</style>

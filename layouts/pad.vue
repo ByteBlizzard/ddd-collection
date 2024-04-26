@@ -68,7 +68,6 @@ const results = await searchContent(search)
         </aside>
       </ScrollPanel>
       <ScrollPanel
-        class="ddd-doc-scroller"
         style="
           position: absolute;
           right: 0;

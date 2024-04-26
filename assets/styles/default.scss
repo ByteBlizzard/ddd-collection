@@ -197,6 +197,9 @@ code {
     transition: background-color 0.5s;
   }
 
+  img {
+    max-width: 100%;
+  }
   a {
     color: inherit;
     text-decoration: none;
@@ -223,6 +226,11 @@ code {
   }
   a > code {
     color: var(--vt-c-brand-dark);
+  }
+  pre.shiki {
+    background-color: #292d3e;
+    border-radius: 0.5rem;
+    padding: 1rem;
   }
 
   blockquote {

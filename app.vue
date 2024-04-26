@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { usePrimeVue } from 'primevue/config'
+const PrimeVue = usePrimeVue()
+
 //====================== 主题 ======================
 const colorMode = useColorMode()
 const existColorMode = window.localStorage.getItem('config.colorMode') || 'light'
@@ -10,15 +13,23 @@ watch(
       return
     }
     window.localStorage.setItem('config.colorMode', n)
+    if (n === 'dark') {
+      PrimeVue.changeTheme('aura-light-green', 'aura-dark-green', 'theme-link', () => {})
+    } else {
+      PrimeVue.changeTheme('aura-dark-green', 'aura-light-green', 'theme-link', () => {})
+    }
   }
 )
 //====================== 布局 ======================
-const layoutName = ref<'pc' | 'mobile'>()
+const layoutNameState = useLayoutName()
 function onresize(ev?: Event) {
-  if (window.innerWidth < 1024) {
-    layoutName.value = 'mobile'
+  const width = window.innerWidth
+  /* if (width < 1024) {
+    layoutNameState.value = 'mobile'
+  } else  */ if (width < 1280) {
+    layoutNameState.value = 'pad'
   } else {
-    layoutName.value = 'pc'
+    layoutNameState.value = 'pc'
   }
 }
 window.onresize = onresize
@@ -26,7 +37,7 @@ onresize()
 </script>
 
 <template>
-  <NuxtLayout :name="layoutName">
+  <NuxtLayout :name="layoutNameState">
     <NuxtPage />
   </NuxtLayout>
 </template>
