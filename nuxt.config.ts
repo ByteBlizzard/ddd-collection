@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const prefix = process.env.NUXT_APP_BASE_URL || ''
 export default defineNuxtConfig({
   devtools: { enabled: true },
   router: {
@@ -15,7 +16,7 @@ export default defineNuxtConfig({
         {
           id: 'theme-link',
           rel: 'stylesheet',
-          href: '/styles/aura-light-green/theme.css',
+          href: prefix + '/styles/aura-light-green/theme.css',
         },
       ],
     },
