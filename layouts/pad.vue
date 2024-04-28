@@ -55,18 +55,9 @@ const results = await searchContent(search)
       <ToggleButton v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
     </div>
     <div class="container">
-      <ScrollPanel
-        style="
-          height: calc(100vh - 3rem);
-          width: var(--vp-sidebar-width-small);
-          position: fixed;
-          border-right: 1px solid var(--vt-c-divider-light);
-        "
-      >
-        <aside class="sider">
-          <ContentNavigation></ContentNavigation>
-        </aside>
-      </ScrollPanel>
+      <aside class="sider">
+        <ContentNavigation></ContentNavigation>
+      </aside>
       <ScrollPanel
         style="
           position: absolute;
@@ -129,10 +120,12 @@ const results = await searchContent(search)
   position: relative;
 }
 .sider {
+  border-right: 1px solid var(--vt-c-divider-light);
   position: fixed;
   top: calc(var(--vt-nav-height) + var(--vt-banner-height, 0px));
   z-index: 1;
   width: var(--vp-sidebar-width-small);
+  height: calc(100vh - 3rem);
   max-width: 100%;
   opacity: 1;
   visibility: visible;
@@ -141,6 +134,7 @@ const results = await searchContent(search)
   transition:
     border-color 0.25s,
     background-color 0.25s;
+  overflow-y: auto;
 }
 .ddd-doc {
   padding: 64px 64px 96px;
