@@ -37,7 +37,7 @@ QQ 群：551966882
     - parking.md #停车场案例详情 url映射为 /examples/parking
   - .首页一级目录.md #只起到说明目录的作用，不会映射到网站中
   - index.md #网站的首页 url映射为 /
-- ...others #其他目录也和Nuxt3官网的目录结构一样
+- [others]... #其他目录也和Nuxt3官网的目录结构一样
 ```
 
 ## 提交须知
