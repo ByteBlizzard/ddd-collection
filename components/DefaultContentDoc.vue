@@ -79,35 +79,20 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-/* .p-panelmenu-panel {
-  border: none;
-  margin-bottom: 0;
-  .p-focus {
-    .p-menuitem-content :hover {
-      background-color: var(--vt-c-divider);
-    }
+.toc {
+  * {
+    background: none !important;
   }
-  .p-panelmenu-header-content {
-    background: none;
-    .p-menuitem {
-      margin: 10px 0;
-    }
-  }
-  .p-panelmenu-content {
-    background: none;
-  }
-  .p-menuitem-text {
-    line-height: 1.2rem;
-    color: var(--vt-c-text-1);
-    left: 32px;
-  }
-} */
+}
 </style>
 <style scoped lang="scss">
 main {
   width: calc(100% - 320px);
 }
 .toc {
+  * {
+    background: none !important;
+  }
   position: fixed;
   top: 3rem;
   right: 0;

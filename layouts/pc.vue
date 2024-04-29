@@ -2,9 +2,6 @@
 import ScrollPanel from 'primevue/scrollpanel'
 import Button from 'primevue/button'
 import ToggleButton from 'primevue/togglebutton'
-import InputText from 'primevue/inputtext'
-import FloatLabel from 'primevue/floatlabel'
-import Dialog from 'primevue/dialog'
 
 //====================== 主题 ======================
 const colorMode = useColorMode()
@@ -19,38 +16,12 @@ watch(lightTheme, (v) => {
 
 //====================== 搜索 ======================
 const searchVisible = ref(false)
-const search = ref('')
-const results = await searchContent(search)
 </script>
 
 <template>
   <div class="root">
     <div class="header">
-      <Dialog v-model:visible="searchVisible" modal dismissableMask :style="{ top: '4rem', width: '35rem' }">
-        <template #header>
-          <FloatLabel>
-            <InputText id="search-input" v-model="search" /><label for="search-input">空格分隔可更好的模糊匹配</label>
-          </FloatLabel>
-        </template>
-
-        <p>搜索结果:</p>
-        <Button
-          v-if="results.length"
-          v-for="item in results"
-          :key="item.id"
-          @click="
-            () => {
-              searchVisible = false
-              $router.push(item.id)
-            }
-          "
-        >
-          {{ item.titles.join('->') }}->{{ item.title }}
-        </Button>
-        <p v-else>无</p>
-        <p>源数据:</p>
-        <pre>{{ results }} </pre>
-      </Dialog>
+      <SearchComponent :show="searchVisible" @close="searchVisible = false"></SearchComponent>
       <Button icon="pi pi-search" label="搜索" @click="searchVisible = true"></Button>
       <ToggleButton v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
     </div>
@@ -98,7 +69,7 @@ const results = await searchContent(search)
   ul[data-level] {
     font-weight: normal;
     padding-left: 2rem;
-    list-style-type: decimal;
+    list-style: decimal;
   }
   ul[data-level] :hover {
     color: var(--vt-c-text-1);

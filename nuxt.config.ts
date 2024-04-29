@@ -41,6 +41,11 @@ export default defineNuxtConfig({
     preference: 'system',
     fallback: 'light',
   },
+  primevue: {
+    components: {
+      exclude: '*',
+    },
+  },
   vite: {
     esbuild: {
       drop: ['console', 'debugger'],

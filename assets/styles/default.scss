@@ -93,6 +93,21 @@
   --shiki-default-font-style: var(--vt-font-family-base);
   --shiki-default-font-weight: normal;
   --shiki-default-text-decoration: none;
+
+  .doc-search {
+    --docsearch-primary-color: var(--vt-c-brand);
+    --docsearch-highlight-color: var(--docsearch-primary-color);
+    --docsearch-text-color: var(--vt-c-text-1);
+    --docsearch-muted-color: var(--vt-c-text-2);
+    --docsearch-searchbox-shadow: none;
+    --docsearch-searchbox-focus-background: transparent;
+    --docsearch-key-gradient: transparent;
+    --docsearch-key-shadow: none;
+    --docsearch-modal-background: var(--vt-c-bg-soft);
+    --docsearch-footer-background: var(--vt-c-bg);
+    --docsearch-hit-height: 56px;
+    --docsearch-hit-color: rgba(60, 60, 60, 0.7);
+  }
 }
 
 .dark-mode {
@@ -113,6 +128,16 @@
   --vt-c-text-inverse-3: var(--vt-c-text-light-3);
   --vt-c-text-inverse-4: var(--vt-c-text-light-4);
   --vt-c-brand-highlight: var(--vt-c-brand-light);
+
+  .doc-search {
+    --docsearch-modal-shadow: none;
+    --docsearch-footer-shadow: none;
+    --docsearch-logo-color: var(--vt-c-text-2);
+    --docsearch-hit-background: var(--vt-c-bg-mute);
+    --docsearch-hit-color: var(--vt-c-text-2);
+    --docsearch-hit-shadow: none;
+    --docsearch-hit-color: rgba(235, 235, 235, 0.6);
+  }
 }
 *,
 :before,
