@@ -16,14 +16,24 @@ watch(lightTheme, (v) => {
 
 //====================== 搜索 ======================
 const searchVisible = ref(false)
+
+//====================== toc ======================
+const tocVisible = useTocVisible()
 </script>
 
 <template>
   <div class="root">
     <div class="header">
       <SearchComponent :show="searchVisible" @close="searchVisible = false"></SearchComponent>
-      <Button icon="pi pi-search" label="搜索" @click="searchVisible = true"></Button>
-      <ToggleButton v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
+      <Button icon="pi pi-search" style="height: 3rem" label="搜索" @click="searchVisible = true"></Button>
+      <ToggleButton style="height: 3rem" v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
+      <Button
+        icon="pi pi-align-center"
+        style="height: 3rem; float: right"
+        severity="secondary"
+        label="本页目录"
+        @click="tocVisible = true"
+      ></Button>
     </div>
     <div class="container">
       <aside class="sider">
@@ -84,7 +94,6 @@ const searchVisible = ref(false)
 }
 .header {
   border-bottom: 1px solid var(--vt-c-divider-light);
-  display: flex;
   height: 3rem;
   width: 100%;
   top: 0;

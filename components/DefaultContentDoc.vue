@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import PanelMenu from 'primevue/panelmenu'
+import Sidebar from 'primevue/sidebar'
 const route = useRoute()
 
 //====================== TOC ======================
+const tocVisible = useTocVisible()
 const tocItems = ref<any>([])
 const expandedKeys = ref<{ [key: string]: boolean }>({})
 const layoutNameState = useLayoutName()
@@ -76,6 +78,14 @@ onMounted(() => {
       style="margin-top: 10px; width: 300px"
     ></PanelMenu>
   </div>
+  <Sidebar v-else v-model:visible="tocVisible" header="本页目录" position="right" @click="tocVisible = false"
+    ><PanelMenu
+      theme="dark"
+      :expandedKeys="expandedKeys"
+      :model="tocItems"
+      style="margin-top: 10px; width: 300px"
+    ></PanelMenu
+  ></Sidebar>
 </template>
 
 <style lang="scss">

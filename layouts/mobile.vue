@@ -19,30 +19,46 @@ const navVisible = ref(false)
 
 //====================== 搜索 ======================
 const searchVisible = ref(false)
+
+//====================== toc ======================
+const tocVisible = useTocVisible()
 </script>
 
 <template>
   <div class="root">
-    <div class="ddd-doc">
-      <div class="header">
-        <SearchComponent mobile :show="searchVisible" @close="searchVisible = false"></SearchComponent>
-        <Button icon="pi pi-align-center" severity="secondary" label="菜单" @click="navVisible = true"></Button>
-        <Button icon="pi pi-search" @click="searchVisible = true"></Button>
-        <ToggleButton v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
-      </div>
+    <div class="header">
+      <SearchComponent mobile :show="searchVisible" @close="searchVisible = false"></SearchComponent>
+      <Button
+        icon="pi pi-align-center"
+        style="height: 3rem"
+        severity="secondary"
+        label="菜单"
+        @click="navVisible = true"
+      ></Button>
+      <Button icon="pi pi-search" style="height: 3rem" @click="searchVisible = true"></Button>
+      <ToggleButton style="height: 3rem" v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
+      <Button
+        icon="pi pi-align-center"
+        style="height: 3rem; float: right"
+        severity="secondary"
+        label="本页目录"
+        @click="tocVisible = true"
+      ></Button>
+    </div>
+    <div class="container">
       <Sidebar v-model:visible="navVisible">
         <aside class="sider">
           <ContentNavigation @click="navVisible = false"></ContentNavigation>
         </aside>
       </Sidebar>
-      <div class="container">
+      <div class="ddd-doc">
         <slot></slot>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .ddd-doc pre.shiki {
   margin: 14px -24px;
   border-radius: unset;
@@ -51,7 +67,6 @@ const searchVisible = ref(false)
   -webkit-overflow-scrolling: touch;
 }
 .header {
-  display: flex;
   height: 3rem;
   width: 100%;
   top: 0;
