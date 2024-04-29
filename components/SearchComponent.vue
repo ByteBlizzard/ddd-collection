@@ -30,7 +30,6 @@ watch(
     searchVisible.value = v
   }
 )
-
 type SearchResult = {
   id: string
   score: number
@@ -41,7 +40,7 @@ type SearchResult = {
   }
   title: string
   content: string
-  titles: string[]
+  titles?: string[]
 }
 type DisplayResults = {
   id: string
@@ -63,16 +62,20 @@ function getFolderTitle(path: string): string {
 }
 function put(container: DisplayResults, item: SearchResult) {
   const title = getFolderTitle(item.id)
+  for (const term of item.queryTerms) {
+    item.content = item.content.replaceAll(term, `<mark>${term}</mark>`)
+  }
+  const child = {
+    id: item.id,
+    title: item.titles ? item.titles.join('->') : item.title,
+    content: item.content,
+  }
   for (const exist of container) {
     if (exist.title === title) {
       if (!exist.children) {
         exist.children = []
       }
-      exist.children.push({
-        id: item.id,
-        title,
-        content: item.content,
-      })
+      exist.children.push(child)
       return
     }
   }
@@ -80,13 +83,7 @@ function put(container: DisplayResults, item: SearchResult) {
     id: title,
     title,
     content: item.content,
-    children: [
-      {
-        id: item.id,
-        title: item.title,
-        content: item.content,
-      },
-    ],
+    children: [child],
   })
 }
 const search = ref('')
@@ -138,6 +135,7 @@ watch(results, (v) => {
           severity="secondary"
           :key="lvl2.id"
           raised
+          :title="lvl2.content || lvl2.title"
           @click="
             () => {
               searchVisible = false
@@ -146,8 +144,8 @@ watch(results, (v) => {
           "
         >
           <div class="doc-search-item-block">
-            <div v-if="lvl2.content" class="doc-search-item-content">{{ lvl2.content }}</div>
-            <div class="doc-search-item-title">{{ lvl2.title }}</div>
+            <div v-if="lvl2.content" v-html="lvl2.content" class="doc-search-item-content"></div>
+            <div v-html="lvl2.title" class="doc-search-item-title"></div>
           </div>
         </Button>
       </div>
@@ -166,6 +164,10 @@ watch(results, (v) => {
 .doc-search {
   top: 4rem;
   width: 35rem;
+  .doc-search-item-content mark {
+    background: none;
+    color: var(--docsearch-highlight-color);
+  }
 }
 </style>
 <style scoped lang="scss">
