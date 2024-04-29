@@ -1,88 +1,38 @@
 <script setup lang="ts">
-import Breadcrumb from 'primevue/breadcrumb'
-import Sidebar from 'primevue/sidebar'
 import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import FloatLabel from 'primevue/floatlabel'
-import type { RouteLocationNormalizedLoaded } from 'vue-router'
+import ToggleButton from 'primevue/togglebutton'
+import Sidebar from 'primevue/sidebar'
 
-//====================== 面包屑导航 ======================
-const home = ref({
-  icon: 'pi pi-home',
-  route: '/',
+//====================== 主题 ======================
+const colorMode = useColorMode()
+const lightTheme = ref(colorMode.value === 'light')
+watch(lightTheme, (v) => {
+  if (v) {
+    colorMode.preference = 'light'
+  } else {
+    colorMode.preference = 'dark'
+  }
 })
-const items = ref<any[]>([])
-function updateRoute(r: RouteLocationNormalizedLoaded) {
-  const breadItems: any[] = []
-  let pre = ''
-  let path = r.fullPath.replace(/^\//, '').replace(/\/$/, '')
-  const paths = path.split('/')
-  paths.forEach((item, index) => {
-    if (item.includes('#')) {
-      item = item.split('#')[0]
-    }
-    let route: string | undefined = pre + `/${item.replace(/\#.*/g, '')}`
-    if (index === paths.length - 1) {
-      route = undefined
-    } else if (index === paths.length - 2) {
-      route += '/'
-    }
-    breadItems.push({ label: item, route })
-    pre = route!
-  })
-  items.value = breadItems
-}
-updateRoute(getRouter().currentRoute.value!)
-watch(getRouter().currentRoute, (r) => {
-  updateRoute(r)
-})
+
+//====================== 导航 ======================
+const navVisible = ref(false)
 
 //====================== 搜索 ======================
 const searchVisible = ref(false)
-const search = ref('')
-const results = await searchContent(search)
 </script>
 
 <template>
+  <Sidebar v-model:visible="navVisible">
+    <aside class="sider">
+      <ContentNavigation @click="navVisible = false"></ContentNavigation>
+    </aside>
+  </Sidebar>
   <div class="ddd-doc">
     <div class="header">
-      <Sidebar v-model:visible="searchVisible" header="更多">
-        <br />
-        <FloatLabel>
-          <InputText id="search-input" v-model="search" /><label for="search-input">空格分隔可更好的模糊匹配</label>
-        </FloatLabel>
-        <p>搜索结果:</p>
-        <Button
-          v-if="results.length"
-          v-for="item in results"
-          :key="item.id"
-          @click="
-            () => {
-              searchVisible = false
-              $router.push(item.id)
-            }
-          "
-        >
-          {{ item.titles.join('->') }}->{{ item.title }}
-        </Button>
-        <p v-else>无</p>
-        <p>源数据:</p>
-        <pre>{{ results }} </pre>
-      </Sidebar>
-      <Button icon="pi pi-search" @click="searchVisible = true" />
-      <Breadcrumb :home="home" :model="items">
-        <template #item="{ item, props }">
-          <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-            <a :href="href" v-bind="props.action" @click="navigate">
-              <span :class="[item.icon, 'text-color']" />
-              <span class="text-primary font-semibold">{{ item.label }}</span>
-            </a>
-          </RouterLink>
-          <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-            <span class="text-color">{{ item.label }}</span>
-          </a>
-        </template>
-      </Breadcrumb>
+      <SearchComponent mobile :show="searchVisible" @close="searchVisible = false"></SearchComponent>
+      <Button icon="pi pi-align-center" severity="secondary" label="菜单" @click="navVisible = true"></Button>
+      <Button icon="pi pi-search" @click="searchVisible = true"></Button>
+      <ToggleButton v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
     </div>
     <div class="container">
       <slot></slot>
@@ -90,7 +40,13 @@ const results = await searchContent(search)
   </div>
 </template>
 
-<style scoped>
+<style lang="scss">
+.ddd-doc pre.shiki {
+  margin: 14px -24px;
+  border-radius: unset;
+}
+</style>
+<style scoped lang="scss">
 .ddd-doc {
   -webkit-overflow-scrolling: touch;
 }
@@ -101,13 +57,53 @@ const results = await searchContent(search)
   top: 0;
   position: relative;
 }
+.sider {
+  li a {
+    line-height: 20px;
+    font-size: 13px;
+    color: var(--vt-c-text-2);
+    transition: color 0.25s;
+    text-decoration: none;
+  }
+  ul {
+    font-weight: bold;
+    padding-left: 1rem;
+    list-style-type: none;
+  }
+  ul[data-level] {
+    font-weight: normal;
+    padding-left: 2rem;
+    list-style-type: decimal;
+  }
+  ul[data-level] :hover {
+    color: var(--vt-c-text-1);
+  }
+  li {
+    padding: 4px 0;
+  }
+}
 .container {
   position: fixed;
   right: 0;
-  padding: 0 64px 96px;
+  padding: 32px 24px 96px;
   width: 100%;
   /* padding-left: calc(100% - var(--vp-sidebar-width-small)); */
   max-height: calc(100vh - 3rem);
   overflow-y: scroll;
+}
+</style>
+<style scoped lang="scss">
+.sider {
+  top: calc(var(--vt-nav-height) + var(--vt-banner-height, 0px));
+  z-index: 1;
+  height: 100%;
+  opacity: 1;
+  visibility: visible;
+  box-shadow: none;
+  transform: translate(0);
+  transition:
+    border-color 0.25s,
+    background-color 0.25s;
+  overflow-y: auto;
 }
 </style>

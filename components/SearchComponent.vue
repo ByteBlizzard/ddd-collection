@@ -9,6 +9,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  mobile: {
+    type: Boolean,
+    default: false,
+  },
 })
 const emits = defineEmits({
   close: () => {},
@@ -87,7 +91,6 @@ function put(container: DisplayResults, item: SearchResult) {
 }
 const search = ref('')
 const results: SearchResult[] = await searchContent(search)
-console.warn(await searchContent('c q r s'))
 const displayResults = ref<DisplayResults>([])
 watch(results, (v) => {
   const t: DisplayResults = []
@@ -103,18 +106,28 @@ watch(results, (v) => {
     id="search-dialog"
     v-model:visible="searchVisible"
     modal
-    :show-header="false"
+    :show-header="mobile"
     dismissableMask
-    class="doc-search"
+    :class="`doc-search ${mobile ? 'mobile' : ''}`"
+    :style="{
+      width: mobile ? '100vw' : '35rem',
+      height: mobile ? '100vh' : 'auto',
+      borderRadius: mobile ? '0' : '1rem',
+    }"
   >
-    <template #header> </template>
+    <template #header>
+      <FloatLabel style="width: 100%">
+        <InputText id="search-input" style="width: 100%" v-model="search" /><label for="search-input"
+          >空格分隔可更好地进行模糊匹配</label
+        >
+      </FloatLabel>
+    </template>
     <br />
-    <FloatLabel style="width: 100%">
+    <FloatLabel v-if="!mobile" style="width: 100%">
       <InputText id="search-input" style="width: 100%" v-model="search" /><label for="search-input"
         >空格分隔可更好地进行模糊匹配</label
       >
     </FloatLabel>
-
     <div v-if="displayResults.length">
       <div v-for="lvl1 in displayResults" :key="lvl1.title">
         <div class="doc-search-hit-source">{{ lvl1.title }}</div>
@@ -146,6 +159,9 @@ watch(results, (v) => {
 <style lang="scss">
 #search-dialog .p-dialog-content {
   border-radius: 12px;
+}
+#search-dialog.mobile .p-dialog-content {
+  margin-top: -44px;
 }
 .doc-search {
   top: 4rem;

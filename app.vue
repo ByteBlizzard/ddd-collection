@@ -27,10 +27,11 @@ watch(
 //====================== 布局 ======================
 const layoutNameState = useLayoutName()
 function onresize(ev?: Event) {
-  const width = window.innerWidth
-  /* if (width < 1024) {
+  const isMobile = window.matchMedia('(max-width: 1024px)').matches
+  const isPad = window.matchMedia('(max-width: 1280px)').matches
+  if (isMobile) {
     layoutNameState.value = 'mobile'
-  } else  */ if (width < 1280) {
+  } else if (isPad) {
     layoutNameState.value = 'pad'
   } else {
     layoutNameState.value = 'pc'
