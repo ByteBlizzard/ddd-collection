@@ -22,20 +22,22 @@ const searchVisible = ref(false)
 </script>
 
 <template>
-  <Sidebar v-model:visible="navVisible">
-    <aside class="sider">
-      <ContentNavigation @click="navVisible = false"></ContentNavigation>
-    </aside>
-  </Sidebar>
-  <div class="ddd-doc">
-    <div class="header">
-      <SearchComponent mobile :show="searchVisible" @close="searchVisible = false"></SearchComponent>
-      <Button icon="pi pi-align-center" severity="secondary" label="菜单" @click="navVisible = true"></Button>
-      <Button icon="pi pi-search" @click="searchVisible = true"></Button>
-      <ToggleButton v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
-    </div>
-    <div class="container">
-      <slot></slot>
+  <div class="root">
+    <div class="ddd-doc">
+      <div class="header">
+        <SearchComponent mobile :show="searchVisible" @close="searchVisible = false"></SearchComponent>
+        <Button icon="pi pi-align-center" severity="secondary" label="菜单" @click="navVisible = true"></Button>
+        <Button icon="pi pi-search" @click="searchVisible = true"></Button>
+        <ToggleButton v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
+      </div>
+      <Sidebar v-model:visible="navVisible">
+        <aside class="sider">
+          <ContentNavigation @click="navVisible = false"></ContentNavigation>
+        </aside>
+      </Sidebar>
+      <div class="container">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -45,8 +47,6 @@ const searchVisible = ref(false)
   margin: 14px -24px;
   border-radius: unset;
 }
-</style>
-<style scoped lang="scss">
 .ddd-doc {
   -webkit-overflow-scrolling: touch;
 }
