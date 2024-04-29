@@ -61,33 +61,6 @@ const tocVisible = useTocVisible()
   </div>
 </template>
 
-<style lang="scss">
-.sider {
-  li a {
-    line-height: 20px;
-    font-size: 13px;
-    color: var(--vt-c-text-2);
-    transition: color 0.25s;
-    text-decoration: none;
-  }
-  ul {
-    font-weight: bold;
-    padding-left: 1rem;
-    list-style-type: none;
-  }
-  ul[data-level] {
-    font-weight: normal;
-    padding-left: 2rem;
-    list-style-type: decimal;
-  }
-  ul[data-level] :hover {
-    color: var(--vt-c-text-1);
-  }
-  li {
-    padding: 4px 0;
-  }
-}
-</style>
 <style scoped lang="scss">
 .ddd-doc {
   -webkit-overflow-scrolling: touch;
