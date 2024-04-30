@@ -10,6 +10,11 @@ export default defineNuxtConfig({
   ssr: false,
   css: ['primeicons/primeicons.css', '~/assets/styles/default.scss'],
   modules: ['@nuxt/content', 'nuxt-primevue', '@nuxtjs/color-mode'],
+  runtimeConfig: {
+    public: {
+      NUXT_APP_BASE_URL: prefix,
+    },
+  },
   app: {
     head: {
       link: [
@@ -22,7 +27,11 @@ export default defineNuxtConfig({
     },
   },
   content: {
-    markdown: {},
+    markdown: {
+      tags: {
+        img: 'Image',
+      },
+    },
     documentDriven: {
       injectPage: false,
     },
