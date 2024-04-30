@@ -304,6 +304,10 @@ aside.sider {
     border-radius: 0.5rem;
     padding: 1rem;
     overflow-x: auto;
+    @media (max-width: 1024px) {
+      margin: 14px -24px;
+      border-radius: unset;
+    }
   }
 
   blockquote {
