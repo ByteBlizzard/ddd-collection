@@ -105,7 +105,7 @@ main {
   }
   position: fixed;
   top: 3rem;
-  right: 0;
+  right: 32px;
   width: 320px;
   height: 100%;
   .title {

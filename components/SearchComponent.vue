@@ -156,7 +156,7 @@ watch(results, (v) => {
 
 <style lang="scss">
 #search-dialog .p-dialog-content {
-  border-radius: 12px;
+  border-radius: 1rem;
 }
 #search-dialog.mobile .p-dialog-content {
   margin-top: -44px;
