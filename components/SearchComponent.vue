@@ -76,8 +76,9 @@ function put(container: DisplayResult[], item: SearchResult) {
     item.titleHtml = item.title.replaceAll(reg, function (m) {
       return `<mark>${m}</mark>`
     })
+    item.titlesHtml = item.titles
     for (let i = 0; item.titles && i < item.titles.length; i++) {
-      item.titles[i] = item.titles[i].replaceAll(reg, function (m) {
+      item.titlesHtml![i] = item.titles[i].replaceAll(reg, function (m) {
         return `<mark>${m}</mark>`
       })
     }
@@ -114,7 +115,7 @@ function putTitle(container: DisplayResult[], item: SearchResult) {
   const child: DisplayResult = {
     id: item.id,
     title: item.titles ? item.titles.join('->') : item.title,
-    titleHtml: item.titles ? item.titlesHtml!.join('->') : item.titleHtml!,
+    titleHtml: item.titlesHtml ? item.titlesHtml!.join('->') : item.titleHtml!,
     matchType: 'title',
     content: item.title,
     contentHtml: item.titleHtml!,
