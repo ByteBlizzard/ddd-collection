@@ -87,11 +87,9 @@ function put(container: DisplayResult[], item: SearchResult) {
   {
     const t: MatchType[] = []
     for (const k of Object.keys(item.match)) {
-      if (item.match[k].length !== 1) {
-        console.error('match error', k, item.match[k])
-        return
+      for (const m of item.match[k]) {
+        t.push(m)
       }
-      t.push(item.match[k][0])
     }
     if (t.length === 0) {
       return
