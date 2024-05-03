@@ -3,7 +3,7 @@ import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
-
+console.warn('init', (await searchContent('web')).value)
 const props = defineProps({
   show: {
     type: Boolean,
@@ -30,24 +30,31 @@ watch(
     searchVisible.value = v
   }
 )
+type MatchType = 'content' | 'title' | 'titles'
 type SearchResult = {
   id: string
   score: number
   terms: string[]
   queryTerms: string[]
   match: {
-    [key: string]: 'content' | 'title'[]
+    [key: string]: MatchType[]
   }
   title: string
+  titleHtml?: string
   content: string
+  contentHtml?: string
   titles?: string[]
+  titlesHtml?: string[]
 }
-type DisplayResults = {
+type DisplayResult = {
   id: string
   title: string
+  titleHtml: string
+  matchType: MatchType
   content: string
-  children?: DisplayResults
-}[]
+  contentHtml?: string
+  children?: DisplayResult[]
+}
 const { data: navigation } = await useAsyncData('navigation', () => fetchContentNavigation())
 function getFolderTitle(path: string): string {
   path = path.replace(/#.*$/, '')
@@ -60,15 +67,57 @@ function getFolderTitle(path: string): string {
   }
   return ''
 }
-function put(container: DisplayResults, item: SearchResult) {
-  const title = getFolderTitle(item.id)
+function put(container: DisplayResult[], item: SearchResult) {
   for (const term of item.queryTerms) {
-    item.content = item.content.replaceAll(term, `<mark>${term}</mark>`)
+    const reg = new RegExp(term, 'ig')
+    item.contentHtml = item.content.replace(reg, function (m) {
+      return `<mark>${m}</mark>`
+    })
+    item.titleHtml = item.title.replaceAll(reg, function (m) {
+      return `<mark>${m}</mark>`
+    })
+    for (let i = 0; item.titles && i < item.titles.length; i++) {
+      item.titles[i] = item.titles[i].replaceAll(reg, function (m) {
+        return `<mark>${m}</mark>`
+      })
+    }
   }
-  const child = {
+  let matchType: MatchType | undefined = undefined
+  {
+    const t: MatchType[] = []
+    for (const k of Object.keys(item.match)) {
+      if (item.match[k].length !== 1) {
+        console.error('match error', k, item.match[k])
+        return
+      }
+      t.push(item.match[k][0])
+    }
+    if (t.length === 0) {
+      return
+    }
+    if (t.includes('content')) {
+      matchType = 'content'
+    } else if (t.includes('title')) {
+      matchType = 'title'
+    } else if (t.includes('titles')) {
+      matchType = 'titles'
+    }
+  }
+  if (matchType === 'content') {
+    putContent(container, item)
+  } else if (matchType === 'title') {
+    putTitle(container, item)
+  }
+}
+function putTitle(container: DisplayResult[], item: SearchResult) {
+  const title = getFolderTitle(item.id)
+  const child: DisplayResult = {
     id: item.id,
     title: item.titles ? item.titles.join('->') : item.title,
-    content: item.content,
+    titleHtml: item.titles ? item.titlesHtml!.join('->') : item.titleHtml!,
+    matchType: 'title',
+    content: item.title,
+    contentHtml: item.titleHtml!,
   }
   for (const exist of container) {
     if (exist.title === title) {
@@ -82,15 +131,45 @@ function put(container: DisplayResults, item: SearchResult) {
   container.push({
     id: title,
     title,
+    titleHtml: item.titleHtml!,
+    matchType: 'title',
+    content: item.contentHtml!,
+    children: [child],
+  })
+}
+function putContent(container: DisplayResult[], item: SearchResult) {
+  const title = getFolderTitle(item.id)
+  const child: DisplayResult = {
+    id: item.id,
+    title: item.titles ? item.titles.join('->') : item.title,
+    titleHtml: item.titlesHtml ? item.titlesHtml.join('->') : item.titleHtml!,
+    matchType: 'content',
     content: item.content,
+    contentHtml: item.contentHtml,
+  }
+  for (const exist of container) {
+    if (exist.title === title) {
+      if (!exist.children) {
+        exist.children = []
+      }
+      exist.children.push(child)
+      return
+    }
+  }
+  container.push({
+    id: title,
+    title,
+    titleHtml: title,
+    matchType: 'title',
+    content: item.contentHtml!,
     children: [child],
   })
 }
 const search = ref('')
 const results: SearchResult[] = await searchContent(search)
-const displayResults = ref<DisplayResults>([])
+const displayResults = ref<DisplayResult[]>([])
 watch(results, (v) => {
-  const t: DisplayResults = []
+  const t: DisplayResult[] = []
   v.forEach((item) => {
     put(t, item)
   })
@@ -143,9 +222,11 @@ watch(results, (v) => {
             }
           "
         >
+          <i v-if="lvl2.matchType === 'content'" class="pi pi-bars"></i>
+          <i v-else class="pi pi-hashtag"></i>
           <div class="doc-search-item-block">
-            <div v-if="lvl2.content" v-html="lvl2.content" class="doc-search-item-content"></div>
-            <div v-html="lvl2.title" class="doc-search-item-title"></div>
+            <div v-if="lvl2.contentHtml" v-html="lvl2.contentHtml" class="doc-search-item-content"></div>
+            <div v-html="lvl2.titleHtml" class="doc-search-item-title"></div>
           </div>
         </Button>
       </div>
@@ -164,7 +245,7 @@ watch(results, (v) => {
 .doc-search {
   top: 4rem;
   width: 35rem;
-  .doc-search-item-content mark {
+  mark {
     background: none;
     color: var(--docsearch-highlight-color);
   }
@@ -187,6 +268,9 @@ watch(results, (v) => {
     width: 100%;
     margin-bottom: 4px;
     height: var(--docsearch-hit-height);
+    i {
+      margin-right: 8px;
+    }
     .doc-search-item-block {
       width: 100%;
       text-align: left;
@@ -196,6 +280,7 @@ watch(results, (v) => {
       font-size: 0.75em;
     }
     .doc-search-item-content {
+      width: calc(100% - 24px);
       font-size: 0.9em;
       overflow: hidden;
       white-space: nowrap;
