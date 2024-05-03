@@ -216,6 +216,11 @@ aside.sider {
     transition: color 0.25s;
     text-decoration: none;
   }
+  li a.router-link-active {
+    color: var(--vt-c-brand);
+    font-weight: 600;
+    transition: color 0.25s;
+  }
   ul {
     font-weight: bold;
     padding-left: 1rem;
