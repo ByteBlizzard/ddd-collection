@@ -32,38 +32,26 @@ onMounted(() => {
 
 <template>
   <pre ref="el" :style="{ display: rendered ? 'block' : 'none' }">
-    <slot></slot>
+    <ContentSlot :use="$slots.default" unwrap="p"/> 
   </pre>
 </template>
 
-<style>
-/* .mermaid rect {
-  stroke: #6195ff !important;
-  fill: #fff !important;
+<style lang="scss">
+.dark-mode pre.mermaid {
+  .cluster-label span {
+    color: #fff !important;
+  }
+  .cluster rect {
+    fill: #4e4e4e !important;
+  }
+  .flowchart-link {
+    stroke: #fff !important;
+  }
+  marker {
+    color: #fff !important;
+  }
+  path {
+    stroke: #fff;
+  }
 }
-
-.mermaid .current-doc.node .label {
-  color: #fff !important;
-}
-
-.mermaid line {
-  stroke: #6195ff !important;
-}
-
-[data-theme='dark'] .mermaid .flowchart-link {
-  stroke: #fff !important;
-}
-
-[data-theme='dark'] .mermaid .messageText {
-  fill: #fff !important;
-}
-
-[data-theme='dark'] .mermaid marker {
-  fill: #fff !important;
-  color: #fff !important;
-}
-
-[data-theme='dark'] .mermaid line {
-  stroke: #fff !important;
-} */
 </style>

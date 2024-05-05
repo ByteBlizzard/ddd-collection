@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import ScrollPanel from 'primevue/scrollpanel'
 import Button from 'primevue/button'
 import ToggleButton from 'primevue/togglebutton'
-import Sidebar from 'primevue/sidebar'
 
 //====================== 主题 ======================
 const colorMode = useColorMode()
@@ -14,9 +14,6 @@ watch(lightTheme, (v) => {
   }
 })
 
-//====================== 导航 ======================
-const navVisible = ref(false)
-
 //====================== 搜索 ======================
 const searchVisible = ref(false)
 
@@ -27,15 +24,8 @@ const tocVisible = useTocVisible()
 <template>
   <div class="root">
     <div class="header">
-      <SearchComponent mobile :show="searchVisible" @close="searchVisible = false"></SearchComponent>
-      <Button
-        icon="pi pi-align-center"
-        style="height: 3rem"
-        severity="secondary"
-        label="菜单"
-        @click="navVisible = true"
-      ></Button>
-      <Button icon="pi pi-search" style="height: 3rem" @click="searchVisible = true"></Button>
+      <SearchComponent :show="searchVisible" @close="searchVisible = false"></SearchComponent>
+      <Button icon="pi pi-search" style="height: 3rem" label="搜索" @click="searchVisible = true"></Button>
       <ToggleButton style="height: 3rem" v-model="lightTheme" onLabel="light" offLabel="dark"></ToggleButton>
       <Button
         icon="pi pi-align-center"
@@ -46,47 +36,50 @@ const tocVisible = useTocVisible()
       ></Button>
     </div>
     <div class="container">
-      <Sidebar v-model:visible="navVisible">
-        <aside class="sider">
-          <ContentNavigation @click="navVisible = false"></ContentNavigation>
-        </aside>
-      </Sidebar>
-      <div class="ddd-doc">
-        <slot></slot>
-      </div>
+      <aside class="sider">
+        <ContentNavigation></ContentNavigation>
+      </aside>
+      <ScrollPanel
+        style="
+          position: absolute;
+          right: 0;
+          width: calc(100% - var(--vp-sidebar-width-small));
+          height: calc(100vh - 3rem);
+        "
+        :pt="{
+          wrapper: {
+            style: { 'border-right': '10px solid var(    --gray-300)' },
+          },
+          bary: 'hover:bg-primary-400 bg-primary-300 opacity-100',
+        }"
+      >
+        <div class="ddd-doc">
+          <slot></slot>
+        </div>
+      </ScrollPanel>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.ddd-doc pre.shiki {
-  margin: 14px -24px;
-  border-radius: unset;
-}
 .ddd-doc {
   -webkit-overflow-scrolling: touch;
 }
 .header {
+  border-bottom: 1px solid var(--vt-c-divider-light);
   height: 3rem;
   width: 100%;
   top: 0;
   position: relative;
 }
-.container {
-  position: fixed;
-  right: 0;
-  padding: 32px 24px 96px;
-  width: 100%;
-  /* padding-left: calc(100% - var(--vp-sidebar-width-small)); */
-  max-height: calc(100vh - 3rem);
-  overflow-y: scroll;
-}
-</style>
-<style scoped lang="scss">
 .sider {
+  border-right: 1px solid var(--vt-c-divider-light);
+  position: fixed;
   top: calc(var(--vt-nav-height) + var(--vt-banner-height, 0px));
   z-index: 1;
-  height: 100%;
+  width: var(--vp-sidebar-width-small);
+  height: calc(100vh - 3rem);
+  max-width: 100%;
   opacity: 1;
   visibility: visible;
   box-shadow: none;
@@ -95,5 +88,8 @@ const tocVisible = useTocVisible()
     border-color 0.25s,
     background-color 0.25s;
   overflow-y: auto;
+}
+.ddd-doc {
+  padding: 64px 64px 96px;
 }
 </style>
